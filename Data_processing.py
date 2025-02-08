@@ -27,13 +27,14 @@ def recommend_content(user_id, top_n=3):
     cosine_sim_df = pd.DataFrame(cosine_sim, index=user_inter_matrix.index, columns=user_inter_matrix.index)
 
     similar_users = cosine_sim_df[user_id].sort_values(ascending=False)
-    recommended_content = set()
+    recommended_content = set() # Avoid duplicates
 
     # Get the movies already rated by the target user
     target_user_ratings = user_inter_matrix.loc[user_id]
     watched_movies = target_user_ratings[target_user_ratings > 0].index
 
     for similar_user, similarity in similar_users.items():
+
         # Get the movies rated by the similar user
         similar_user_ratings = user_inter_matrix.loc[similar_user]
         # Find movies that the similar user has rated but the target user has not

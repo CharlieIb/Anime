@@ -1,0 +1,26 @@
+blinker @ file:///croot/blinker_1737448726027/work
+click @ file:///work/perseverance-python-buildout/croot/click_1698845879718/work
+Flask @ file:///croot/flask_1737454299809/work
+Flask-SQLAlchemy @ file:///croot/flask-sqlalchemy_1712567272472/work
+greenlet @ file:///croot/greenlet_1733860072744/work
+itsdangerous @ file:///croot/itsdangerous_1716533337253/work
+Jinja2 @ file:///croot/jinja2_1737760107953/work
+joblib @ file:///croot/joblib_1718217211762/work
+MarkupSafe @ file:///croot/markupsafe_1738584038848/work
+mkl-service==2.4.0
+mkl_fft @ file:///io/mkl313/mkl_fft_1730824109137/work
+mkl_random @ file:///io/mkl313/mkl_random_1730823916628/work
+numpy==2.2.2
+pandas==2.2.3
+python-dateutil==2.9.0.post0
+pytz==2025.1
+scikit-learn @ file:///croot/scikit-learn_1737988764076/work
+scipy @ file:///croot/scipy_1737122901252/work/dist/scipy-1.15.1-cp312-cp312-linux_x86_64.whl#sha256=7b1b0001c943e119509d010e5cbb4950dd6e325a83ca2510a25f139dac6d66a8
+setuptools==75.8.0
+six==1.17.0
+SQLAlchemy @ file:///croot/sqlalchemy_1736565039440/work
+threadpoolctl @ file:///croot/threadpoolctl_1719407800858/work
+typing_extensions @ file:///croot/typing_extensions_1734714854207/work
+tzdata==2025.1
+Werkzeug @ file:///croot/werkzeug_1737448706492/work
+wheel==0.45.1
