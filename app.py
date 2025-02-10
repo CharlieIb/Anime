@@ -3,6 +3,7 @@ from sqlalchemy import create_engine, text
 from flask import Flask, request, jsonify
 from Data_processing import recommend_content
 from database import db
+from front_end_connector import FrontEndConnector
 
 # Flask has been included for the potential of extending the project further in the future!
 
@@ -37,9 +38,31 @@ with app.app_context():
 
 # Initialise the app
 app = create_app()
+# Request the information from the user
 
-recommend_content = recommend_content(30)
+## request the list of shows from SQL and show in a drop down menu // automatic fill
+with app.app_context():
+    result = db.session.execute(text("""
+                        SELECT anime_id, name FROM anime WHERE rating > 8 and members > 200000""")).fetchall()
 
+
+## output to HTML sheet
+
+##In the HTML
+## Select min 3 max 10 shows
+
+## Give ratings to these shows 0 - 10
+
+## input from HTML sheet
+
+user_pref = [(1, 'Cowboy Bebop', 1.0), (19, 'Monster', 10.0), (33, 'Berserk', 7.0), (43, 'Ghost in the Shell', 9.5), (5114, 'Fullmetal Alchemist: Brotherhood', 10.0), (6702, 'Fairy Tail', 6.0), (18679, 'Kill la Kill', 6.5), (30276, 'One Punch Man', 7.0), (120, 'Fruits Basket', 10.0)]
+
+
+## These ratings, along with the user_id are fed back into the below function and recommendations for new shows are produced.
+recommend_content = recommend_content(user_pref)
+
+
+# !!!!! make the below into a function, potentially only one SQL command to increase speed.
 first_rec = recommend_content[0]
 second_rec = recommend_content[1]
 third_rec = recommend_content[2]
@@ -53,10 +76,11 @@ with app.app_context():
     third = db.session.execute(text("SELECT name FROM anime WHERE anime_id = :third_rec"),
                            {"third_rec" : third_rec}).fetchone()
 
-print(f"Recommended anime content for user 500: {first}, {second}, {third}")
+print(f"Recommended anime content for user: {first}, {second}, {third}")
 
 
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    fec = FrontEndConnector()
+    fec.index()
