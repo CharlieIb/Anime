@@ -2,41 +2,35 @@
 can select a title of an anime and rate it from 1-10. Hopefully this can be extended
 to a dynamically expanding list which can go up to 10. Also potentially if a user does not enter
 one input it can automatically detect and reject that input-->
-
-
-
-{% macro input_field(name, placeholder) %}
-    <input type="text" name="{{ name }}" placeholder="{{ placeholder }}">
+{% macro option_field(value) %}
+    <option value="{{ value }}">{{ value }}</option>
 {% endmacro %}
-{% macro label_field(for, text) %}
-    <label for="{{ for }}">{{ text }}:</label>
-{% endmacro %}
-{% macro select_field(name, id) %}
-    <select name="{{ name }}" id="{{ id }}" >
-{% endmacro %}
-<label for="rating_2">Rating for Monster (0-10):</label>
-        <input type="number" name="rating_2" min="0" max="10" step="0.5" required>
-        <br><br>
-
 
 {% extends "base.html" %}
-{% block title %}HOME{% endblock %}
+{% block title %}Anime Rating Form{% endblock %}
 
 {% block body %}
     <div class="form-container">
         <h1>Select Anime and Provide Ratings</h1>
-    <form method="POST">
-        <label for="anime">Choose Anime:</label>
-        <select name="anime" id="anime">
-            {% for name in names %}
-                <option value="{{ name }}">{{ name }}</option>
-            {% endfor %}
+    <div>
+    <!-- Dropdown to select the number of ratings -->
+    <label for="num_ratings">Number of Ratings (5-10)</label>
+        <select id="num_ratings" onchange="generateRatingFields()">
+            {{ option_field(5) }}
+            {{ option_field(6) }}
+            {{ option_field(7) }}
+            {{ option_field(8) }}
+            {{ option_field(9) }}
+            {{ option_field(10) }}
         </select>
-        <br><br>
-        <label for="ratings">Provide Ratings (1-10):</label>
-        <input type="number" name="ratings" min="1" max="10" step="0.5" required>
-        <br><br>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
     </div>
+    <div id="rating_container">
+        <!-- Rating fields will be dynamically generated here -->
+    </div>
+    <button onclick="submitRatings()">Submit Ratings</button>
+    </div>
+    <script>
+        // passing flask data to JS
+        const anime_list = {{ names | tojson }}
+    </script>
 {% endblock %}

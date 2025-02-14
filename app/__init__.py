@@ -52,27 +52,29 @@ class FrontEndConnector:
 
 
     def add_routes(self):
-        self.app.add_url_rule('/', 'home', self.home, methods=['GET', 'POST'])
-
+        self.app.add_url_rule('/', 'home', self.home, methods=['GET'])
+        self.app.add_url_rule('/submit_ratings', self.submit_ratings, methods=['POST'])
 
     # Routes
     def home(self):
         print("index called")
-        if request.method == "POST":
-            # Process user input
-            user_pref = self.input_pref()
-
-            ## These ratings, along with the user_id are fed back into the below function and recommendations for new shows are produced.
-            recommended_content = self.recommend_content(user_pref)
-
-            # Get the names from the recommended content
-            recommended_names = self.get_recommended_names(recommended_content)
-
-            # Printing to check
-            print(f"Recommended anime content for user: {recommended_names[0]}, {recommended_names[1]},{recommended_names[2]}")
-            return render_template("home.html", names=self.get_anime_names(), recommendations=recommended_names)
         return render_template('home.html', names=self.get_anime_names(), recommendations=None)
 
+    def submit_ratings(self):
+
+        # Process user input
+        user_pref = self.input_pref()
+
+        ## These ratings, along with the user_id are fed back into the below function and recommendations for new shows are produced.
+        recommended_content = self.recommend_content(user_pref)
+
+        # Get the names from the recommended content
+        recommended_names = self.get_recommended_names(recommended_content)
+
+        # Printing to check
+        print(
+            f"Recommended anime content for user: {recommended_names[0]}, {recommended_names[1]},{recommended_names[2]}")
+        return render_template("home.html", names=self.get_anime_names(), recommendations=recommended_names)
 
 
     # Helper methods
