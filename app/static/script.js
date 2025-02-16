@@ -52,15 +52,15 @@ function submitRatings(){
     for (let i = 1; i <= numRatingsValue; i++){
         const ratingElement = document.getElementById(`rating_id${i}`);
         const rating = parseFloat(ratingElement.value);
-        console.log(rating)
+
         const selectedElement = document.getElementById(`anime_js_id${i}`);
         const selectedIndex = selectedElement.selectedIndex;
         const selectedOption = selectedElement.options[selectedIndex];
         const name = selectedOption.text
-        console.log(name)
+
         const animeElement = document.getElementById(`anime_js_id${i}`);
         const animeJsonId = parseInt(animeElement.value);
-        console.log(animeJsonId);
+
         ratings[animeJsonId] = {'name' : name, 'rating' : rating};
         ratingsArray.push({ "anime_id" : animeJsonId, "name" : name, "rating" : rating});
     }
@@ -86,14 +86,16 @@ function submitRatings(){
                 console.error("Failed to parse JSON:", error);
             }
         })
-        .then(data => {
-            alert(data.message);
-        })
         .catch(error => {
             console.error('Error', error)
             alert('An error occurred while submitting ratings.')
-        });
-}
+        })
+        .then(text => {
+            const data = JSON.parse(text)
+            console.log(data)
+            }
+        );
+    }
 window.onload = function() {
     // Generate fields based on the default selected value
     generateRatingFields();

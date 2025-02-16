@@ -1,5 +1,5 @@
 # Flask and SQL
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
@@ -53,7 +53,7 @@ class FrontEndConnector:
 
     def add_routes(self):
         self.app.add_url_rule('/', 'home', self.home, methods=['GET'])
-        self.app.add_url_rule('/submit_ratings', self.submit_ratings, methods=['POST'])
+        self.app.add_url_rule('/submit_ratings', 'submit_ratings', self.submit_ratings, methods=['POST'])
 
     # Routes
     def home(self):
@@ -61,16 +61,21 @@ class FrontEndConnector:
         return render_template('home.html', names=self.get_anime_names(), recommendations=None)
 
     def submit_ratings(self):
-
-        # Process user input - stand in
-        # user_pref = self.input_pref()
-
-        # Request JSON data file
         data = request.json
-        print(data)
-        anime_id = data.get('anime_id')
-        name = data.get('name')
-        rating = data.get('rating')
+        # Checks to ensure the data has arrived and is in the correct format
+        if not data:
+            return jsonify({"status": "error", "message": "No JSON data received"}), 400
+
+        ratings = data.get("ratings")
+        if not ratings:
+            return jsonify({"status": "error", "message": "Missing 'ratings' key in JSON data"}), 400
+
+        if not isinstance(ratings, list):
+            return jsonify({"status": "error", "message": "'ratings' must be a list"}), 400
+
+
+        # Takes the data and coverts it into a tuple for use
+        user_pref = self.input_pref(ratings)
 
         ## These ratings, along with the user_id are fed back into the below function and recommendations for new shows are produced.
         recommended_content = self.recommend_content(user_pref)
@@ -80,8 +85,9 @@ class FrontEndConnector:
 
         # Printing to check
         print(
-            f"Recommended anime content for user: {recommended_names[0]}, {recommended_names[1]},{recommended_names[2]}")
-        return render_template("home.html", names=self.get_anime_names(), recommendations=recommended_names)
+           f"Recommended anime content for user: {recommended_names[0]}, {recommended_names[1]},{recommended_names[2]}")
+        response = jsonify({"status": "success", "message": "Ratings submitted successfully!", "preferences": recommended_names})
+        return response
 
 
     # Helper methods
@@ -101,11 +107,20 @@ class FrontEndConnector:
 
         return names
 
-    def input_pref(self):
-        user_pref = [(1, 'Cowboy Bebop', 1.0), (19, 'Monster', 10.0), (33, 'Berserk', 7.0),
-                     (43, 'Ghost in the Shell', 9.5), (5114, 'Fullmetal Alchemist: Brotherhood', 10.0),
-                     (6702, 'Fairy Tail', 6.0), (18679, 'Kill la Kill', 6.5), (30276, 'One Punch Man', 7.0),
-                     (120, 'Fruits Basket', 10.0)]
+    def input_pref(self, prefs):
+        #user_pref = [(1, 'Cowboy Bebop', 1.0), (19, 'Monster', 10.0), (33, 'Berserk', 7.0),
+        #             (43, 'Ghost in the Shell', 9.5), (5114, 'Fullmetal Alchemist: Brotherhood', 10.0),
+        #             (6702, 'Fairy Tail', 6.0), (18679, 'Kill la Kill', 6.5), (30276, 'One Punch Man', 7.0),
+        #             (120, 'Fruits Basket', 10.0)]
+        user_pref = []
+
+        for pref in prefs:
+            anime_id = pref.get('anime_id')
+            name = pref.get('name')
+            rating = pref.get('rating')
+            user_pref.append((anime_id, name, rating))
+
+        print(user_pref)
         return user_pref
 
     def recommend_content(self, new_user_data, top_n=3):
