@@ -16,6 +16,9 @@ one input it can automatically detect and reject that input-->
     <!-- Dropdown to select the number of ratings -->
     <label for="num_ratings">Number of Ratings (5-10)</label>
         <select id="num_ratings" onchange="generateRatingFields()">
+            {{ option_field(2) }}
+            {{ option_field(3) }}
+            {{ option_field(4) }}
             {{ option_field(5) }}
             {{ option_field(6) }}
             {{ option_field(7) }}

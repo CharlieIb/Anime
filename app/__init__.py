@@ -62,8 +62,15 @@ class FrontEndConnector:
 
     def submit_ratings(self):
 
-        # Process user input
-        user_pref = self.input_pref()
+        # Process user input - stand in
+        # user_pref = self.input_pref()
+
+        # Request JSON data file
+        data = request.json
+        print(data)
+        anime_id = data.get('anime_id')
+        name = data.get('name')
+        rating = data.get('rating')
 
         ## These ratings, along with the user_id are fed back into the below function and recommendations for new shows are produced.
         recommended_content = self.recommend_content(user_pref)
@@ -87,7 +94,11 @@ class FrontEndConnector:
             """)).fetchall()
 
         # Extract the names from the result
-        names = [row[1] for row in result]
+        names = {"anime_id": [], "name": []}
+        for row in result:
+            names["anime_id"].append(row[0])
+            names["name"].append(row[1])
+
         return names
 
     def input_pref(self):
